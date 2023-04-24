@@ -30,11 +30,13 @@ public class PanelNorteInfo extends JPanel implements ActionListener
 	public PanelNorteInfo(VentanaJuego vJuego)
 	{
 		juegoSize=new JComboBox<String>();
-		juegoSize.setBounds(10,10,80,20);
+		juegoSize.setBounds(10,10,80,20); //cuadra mas o menos el tamaño
 		juegoSize.addItem("4x4");
 		juegoSize.addItem("5x5");
 		juegoSize.addItem("6x6");
 		juegoSize.addItem("7x7");
+		juegoSize.addActionListener(vJuego); //se le añade el action listener
+		
 		configurarDFacil(new JRadioButton("Fácil"));
 		configurarDMedio(new JRadioButton("Medio"));
 		configurarDDificil(new JRadioButton("Difícil"));
@@ -58,7 +60,7 @@ public class PanelNorteInfo extends JPanel implements ActionListener
 		add(getDMedio());
 		add(getDFacil());
 		
-		
+		juegoSize.addActionListener(vJuego.darTableroDeJuego());
 		
 	}
 	@Override
@@ -100,4 +102,12 @@ public class PanelNorteInfo extends JPanel implements ActionListener
 		return dDificil;
 	}
 	
+	public String getTableroSize() {
+		 return juegoSize.getSelectedItem().toString();
+	 }
+	
+	public JComboBox getJuegoSize()
+	{
+		return juegoSize;
+	}
 }

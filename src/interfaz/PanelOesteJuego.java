@@ -1,10 +1,17 @@
 package interfaz;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -14,119 +21,179 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import interfaz.VentanaJuego;
+import uniandes.dpoo.taller4.modelo.Tablero;
 
-public class PanelOesteJuego extends JPanel implements MouseListener
+public class PanelOesteJuego extends JPanel implements ActionListener,MouseMotionListener,MouseListener
 {
-	 private int ladoTablero;
-	   private VentanaJuego principal;
-	    
-	    
-	    public PanelOesteJuego( VentanaJuego pPrincipal )
-	    {
-	        principal = pPrincipal;
-	        addMouseListener( this );
-	        add(new JLabel("                                                                          " ));
-	    }
-	    
-	    public void paint(Graphics g)
-	    {
-	        Graphics2D  g2d = (Graphics2D) g;
-	        
-	        g.drawRect( 0, 0, 120, 320 );
-	        g.setColor( Color.CYAN );
-	        
-	        g.fillRect( 10, 50, 50, 60 );
-	        
-	        boolean[][] tableroJuego= principal.darTableroJuego( );
-	        tableroJuego[5][3]=true;
-	        tableroJuego[5][4]=true;
-	        ladoTablero=tableroJuego.length;
-	        
-	        int ancho=getWidth( )/ladoTablero;
-	        int alto= getHeight( )/ladoTablero;
-	        
-	        for(int i=0;i<ladoTablero;i++)
-	        {
-	            for(int j=0; j<ladoTablero;j++)
-	            {
-	                if(tableroJuego[i][j]==true)
-	                {
-	                    g.setColor( Color.YELLOW );
-	                    g.fillRect( i*ancho, j*alto, ancho, alto );
-	                    g.setColor( Color.BLACK );
-	                    g.drawRect( i*ancho, j*alto, ancho, alto );
-	                    
-	                }
-	                else
-	                {
-	                    g.setColor( Color.GRAY );
-	                    g.fillRect( i*ancho, j*alto, ancho, alto );
-	                    g.setColor( Color.BLUE );
-	                    g.drawRect( i*ancho, j*alto, ancho, alto );
-	                }
-	                
-	                
-	            }
-	            
-	        }
-	        
-	        
-	    }
+	
+	
+	private int sizeCell = 0;
+	private Dimension size = new Dimension(500,500);
+	private int sideCell = 0;
+	private Image on = null;
+	private Image off = null;
+	private VentanaJuego interfaz = null;
+	private Tablero tablero = null;
+	private boolean[][] matriz = null;
+	
+	public PanelOesteJuego( VentanaJuego interf, int tamm) 
+	{
+		this.setSize(size);
+		this.setVisible(true);
+		this.sideCell = tamm;
+		this.sizeCell = size.height/tamm;
+		//this.on = onn;
+		//this.off = offf;
+		this.interfaz = interf;
+		this.tablero = interf.darTablero();
+		this.matriz = interf.darTablero().darTablero();
+	
+		addMouseListener(this);
+	}
+	
+	public void paint(Graphics g) 
+	{
+		super.paint(g);
+		Graphics2D g2d = (Graphics2D) g;
+					
+		int alto = size.height/sideCell;
+		int ancho = size.width/sideCell;
+		int fila = 1;
+		int columna = 1;
+		int xaxis = 0;
+		int yaxis = 0;
+		
+		
+		while (columna <= sideCell && fila <= sideCell)
+		{
+			boolean onn = matriz[fila-1][columna-1];
+			RoundRectangle2D.Double rectangle = new RoundRectangle2D.Double(xaxis,yaxis,alto,ancho,20,20);
+			g2d.draw(rectangle); //dibuja los rectangulos
+			if (onn) {
+				g2d.setPaint(new GradientPaint( xaxis, yaxis, Color.YELLOW, xaxis+ancho, yaxis+alto,Color.GREEN));
+			}
+			else if (onn == false) {
+				g2d.setPaint(new GradientPaint( xaxis, yaxis, Color.BLACK, xaxis+ancho, yaxis+alto,Color.GRAY ) );
+			}
+			g2d.fill(rectangle);
+			
+			if (onn) {
+				g2d.drawImage(on,xaxis+15,yaxis+15,ancho-30,alto-30,this);
+			}
+			else if (onn == false) {
+				g2d.drawImage(off,xaxis+15,yaxis+15,ancho-30,alto-30,this);
+			}
+			xaxis += ancho;
+			if (columna == sideCell) {
+				yaxis += alto;
+				xaxis = 0;
+				columna = 1;
+				fila ++;
+			}
+			else {columna++;}
+		}
+	}
+	
+	void actualizarTableroSize(int n) {
+		interfaz.setTablero(new Tablero(n));
+		interfaz.setSizeTablero(n);
+		
+		this.sideCell = n;
+		this.sizeCell = size.height/n;
+		
+		actualizarTablero();
+		
+	}
+	
+	private void pintarCasilla(int fila, int columna) {
+			tablero.jugar(fila, columna);
+			interfaz.setTablero(tablero);
+			interfaz.contadorjugadas();
+			actualizarTablero();
+			interfaz.finalizo();
+			
+	}
+	
+	private int[] hallarCasilla(int X, int Y) {
+		int fila = (Y / sizeCell);
+		int columna = (X / sizeCell);
+		int[] casilla = {fila,columna};
+		return casilla;
+	}
+
+	public void actualizarTablero() {
+		this.tablero = interfaz.darTablero();
+		this.matriz = interfaz.darTablero().darTablero();
+		repaint();
+	}
+	
+	
+	
+	
+public void actionPerformed(ActionEvent e) {
+		
+		
+		
+		
+	}
+	
+	
 
 
-	    @Override
-	    public void mouseClicked( MouseEvent e )
-	    {
-	        // no se hace
-	        
-	    }
+	public void mouseClicked(MouseEvent e) 
+	{
+		// TODO Auto-generated method stub
+		int coordX = e.getX();
+		int coordY = e.getY();
+		if (coordX <= sizeCell*sideCell && coordY <= sizeCell*sideCell) 
+		{
+			int[] casilla = hallarCasilla(coordX,coordY);
+			pintarCasilla(casilla[0], casilla[1]);
+						
+		}
+	}
+	
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
 
-	    @Override
-	    public void mousePressed(MouseEvent e)
-	    {
-	        int click_x = e.getX();
-	        int click_y = e.getY();
-	        int[] casilla = convertirCoordenadasACasilla(click_x, click_y);
-	        //cuenta los clicks por casilla
-	        //cantidades[casilla[0]][casilla[1]]++;
-	        //Hace click
-//	        JOptionPane.showMessageDialog( this, "Hizo click en \n fila:"+ casilla[0] +"\n columna" +casilla[1] );
-	        principal.jugar(casilla[1], casilla[0]);
-	        // guarda las ultimas coordenadas
-	        //this.ultima_fila = casilla[0];
-	        //this.ultima_columna = casilla[1];
-	        repaint();
-	    }
-	    
-	    private int[] convertirCoordenadasACasilla(int x, int y)
-	    {
-//	        int ladoTablero = tablero.length;
-	        int altoPanelTablero = getHeight();
-	        int anchoPanelTablero = getWidth();
-	        int altoCasilla = altoPanelTablero / ladoTablero;
-	        int anchoCasilla = anchoPanelTablero / ladoTablero;
-	        int fila = (int) (y / altoCasilla);
-	        int columna = (int) (x / anchoCasilla);
-	        return new int[] { fila, columna };
-	    }
 
-	    @Override
-	    public void mouseReleased( MouseEvent e )
-	    {
-	        // no se hace
-	        
-	    }
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
 
-	    @Override
-	    public void mouseEntered( MouseEvent e )
-	    {
-	        // no se hace
-	    }
 
-	    @Override
-	    public void mouseExited( MouseEvent e )
-	    {
-	        // no se hace
-	        
-	    }
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+
+
+		  
 }
