@@ -1,6 +1,8 @@
 package interfaz;
 //asdfasdfs
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,44 +19,47 @@ import interfaz.VentanaJuego;
 
 public class PanelEsteOpciones extends JPanel implements ActionListener
 {
-    private JButton btn1;
-    private JButton btnOpc1;
-    private JList listaTop;
-    private JButton btnOpc3;
+	private JButton bRestart;
+	private JButton bNewGame;
+	private JButton bChangePlayer;
+	private JButton bTop10;
+	private VentanaJuego vJuego;
     
-    private VentanaJuego principal;
-    
+	
     public PanelEsteOpciones(VentanaJuego principal)
     {
-        this.principal=principal;
-       
-        //Lay out the label and scroll pane from top to bottom.
+    	vJuego = principal;
+    	setPreferredSize(new Dimension(300, 200));
+		FlowLayout bl = new FlowLayout(100, 100, 100);
+		setLayout(bl);
 
-        setLayout(new GridLayout( 13,1  ) ); 
-        setBorder( new TitledBorder( "Opciones" ) );
-        
-        btn1= new JButton("NUEVO" );
-        btn1.addActionListener( this );
-        btn1.setBackground( new Color( 100, 100, 100 ) );
-        btn1.setForeground( Color.WHITE );
-        
-        add(btn1);
-        btnOpc1=new JButton( "REINICIAR");
-        btnOpc1.addActionListener( this );
-        add(btnOpc1);
-        
-        listaTop=new JList();
-        add(listaTop);
-                
-        btnOpc3=new JButton( "CAMBIAR JUGADOR");
-        add(btnOpc3);
-        btnOpc3.addActionListener( this );
+		bRestart = new JButton("Reiniciar Juego");
+		//bRestart.addActionListener((ActionListener) principal);
+		
+		bNewGame = new JButton("Nuevo Juego");
+		//bNewGame.addActionListener((ActionListener) vJuego);
+		
+		bChangePlayer = new JButton("Cambiar Jugador");
+		//bChangePlayer.addActionListener((ActionListener) vJuego);
+			
+		bTop10 = new JButton("Mejores 10");
+		bTop10.addActionListener((ActionListener) vJuego);
+		
+		add(bRestart);
+		add(bNewGame);
+		add(bChangePlayer);
+		add(bTop10);
     }
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public JButton getBTop10()
+	{
+		return bTop10;
 	}
 
     

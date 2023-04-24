@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;
 
-//queputas
+
 
 
 public class PanelNorteInfo extends JPanel implements ActionListener
@@ -57,10 +57,6 @@ public class PanelNorteInfo extends JPanel implements ActionListener
 		add(getDDificil());
 		add(getDMedio());
 		add(getDFacil());
-		
-		
-		
-		
 		
 		
 		
