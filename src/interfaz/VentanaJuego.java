@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 
 import uniandes.dpoo.taller4.modelo.Tablero;
 
-
+//ensayis
 
 public class VentanaJuego  extends JFrame
 {
