@@ -41,9 +41,8 @@ public class PanelNorteInfo extends JPanel implements ActionListener
 		configurarDMedio(new JRadioButton("Medio"));
 		configurarDDificil(new JRadioButton("Difícil"));
 		
-		configurarDFacil(new JRadioButton("Fácil"));
-		configurarDMedio(new JRadioButton("Medio"));
-		configurarDDificil(new JRadioButton("Difícil"));
+		dFacil.setSelected(true); //Default que la dificultad sea la fácil
+		
 		
 		ButtonGroup grupoDificultades = new ButtonGroup();
 		grupoDificultades.add(getDDificil());
@@ -66,6 +65,22 @@ public class PanelNorteInfo extends JPanel implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	public int darDificultadParaTablero()//asigna el número de la dificultad 
+	{
+		int dificultad = 2;
+		if (dMedio.isSelected()==true)
+		{
+			dificultad = 5;
+		}
+		else if (dDificil.isSelected()==true)
+		{
+			dificultad = 10;
+		}
+		
+		return dificultad; 
 		
 	}
 	

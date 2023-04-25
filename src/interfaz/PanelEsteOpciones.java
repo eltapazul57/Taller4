@@ -34,13 +34,13 @@ public class PanelEsteOpciones extends JPanel implements ActionListener
 		setLayout(bl);
 
 		bRestart = new JButton("Reiniciar Juego");
-		//bRestart.addActionListener((ActionListener) principal);
+		bRestart.addActionListener((ActionListener) principal);
 		
 		bNewGame = new JButton("Nuevo Juego");
-		//bNewGame.addActionListener((ActionListener) vJuego);
+		bNewGame.addActionListener((ActionListener) vJuego);
 		
 		bChangePlayer = new JButton("Cambiar Jugador");
-		//bChangePlayer.addActionListener((ActionListener) vJuego);
+		bChangePlayer.addActionListener((ActionListener) vJuego);
 			
 		bTop10 = new JButton("Mejores 10");
 		bTop10.addActionListener((ActionListener) vJuego);
@@ -53,8 +53,17 @@ public class PanelEsteOpciones extends JPanel implements ActionListener
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		//Reiniciar juego desde aquí no hay que hacer otra clase ni crear otra ventana para reiniciar el juego 
 		
+	}
+	
+	public JButton getRestartGame()
+	{
+		return bRestart;
+	}
+	public JButton getNewGame()
+	{
+		return bNewGame;
 	}
 	
 	public JButton getBTop10()

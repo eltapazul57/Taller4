@@ -48,7 +48,7 @@ public class VentanaJuego  extends JFrame implements ActionListener
 		
 		setSize( 800,800 );
 		setResizable( false );
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE );;
+		setDefaultCloseOperation( DISPOSE_ON_CLOSE );// copiado de ejemlo de museo
 		setTitle( "Luces afuera" );
 		//setLayout( new BorderLayout( ) );
 		
@@ -118,7 +118,7 @@ public class VentanaJuego  extends JFrame implements ActionListener
 			if (tablero.tableroIluminado() && tablero.darJugadas()!=0) {
 				JOptionPane.showMessageDialog(this,"Bien!!");
 				top10.agregarRegistro(reporteJugadas.getJugador(), tablero.calcularPuntaje());
-				replayy();
+				dondeJuego.actualizarTablero();
 			}
 		}
 	 
@@ -135,6 +135,13 @@ public class VentanaJuego  extends JFrame implements ActionListener
 		 if (e.getSource()==panelOpciones.getBTop10()) 
 		 {
 			 MostrarTop10 ventanaEmergente = new MostrarTop10(this);
+		 }
+		 else if (e.getSource()== panelOpciones.getNewGame())
+		 {
+			 int dificultadJuego = panelInfo.darDificultadParaTablero();
+			 
+			 tablero.desordenar(dificultadJuego);
+			 dondeJuego.repaint(); //revisar para que si se esté repintando 
 		 }
 		 
 		 
